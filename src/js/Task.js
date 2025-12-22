@@ -44,6 +44,8 @@ export default class Task {
     this.startX = 0;
     this.startY = 0;
 
+    this.tasksDiv._taskInstance = this;
+
     this.loadState();
   }
 
@@ -127,7 +129,7 @@ export default class Task {
   onMouseUp(e) {
     if (!this.dragging) return;
 
-    this.dragging.style = undefined;
+    this.dragging.style = " ";
 
     const { target } = e;
     let previous = target.previousElementSibling;
@@ -164,10 +166,18 @@ export default class Task {
       this.placeholder.parentNode.removeChild(this.placeholder);
     }
 
+    const allContainers = document.querySelectorAll(".container-task");
+    allContainers.forEach((container) => {
+      const taskInstance = container._taskInstance;
+      if (taskInstance) {
+        taskInstance.saveState();
+      }
+    });
+
     this.dragging = null;
     this.placeholder = null;
 
-    this.saveState();
+    // this.saveState();
 
     document.documentElement.removeEventListener("mouseup", this.onMouseUp);
     document.documentElement.removeEventListener("mousemove", this.onMouseMove);
